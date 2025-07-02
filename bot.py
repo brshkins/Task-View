@@ -119,8 +119,3 @@ def run():
 
 if __name__ == "main":
     run()
-    print("🟡 Бот запускается...")
-    try:
-        asyncio.run(main())
-    except Exception as e:
-        print("🔴 Ошибка при запуске:", e)
