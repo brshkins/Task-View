@@ -117,5 +117,10 @@ def run():
     web.run_app(app, port=8080)
 
 
-if __name__ == "__main__":
+if __name__ == "main":
     run()
+    print("🟡 Бот запускается...")
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print("🔴 Ошибка при запуске:", e)
