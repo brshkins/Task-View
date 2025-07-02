@@ -23,3 +23,8 @@ async def get_plans_by_date(date: str):
         cursor = await db.execute("SELECT text FROM plans WHERE date = ?", (date,))
         rows = await cursor.fetchall()
         return [row[0] for row in rows]
+
+async def delete_plans_by_date(date: str):
+    async with aiosqlite.connect(DB_NAME) as db:
+        await db.execute("DELETE FROM plans WHERE date = ?", (date,))
+        await db.commit()

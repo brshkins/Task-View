@@ -6,7 +6,7 @@ from aiogram.enums import ParseMode
 from datetime import datetime, timedelta
 
 from config import BOT_TOKEN, ADMIN_ID
-from db import init_db, add_plan, get_plans_by_date
+from db import init_db, add_plan, get_plans_by_date, delete_plans_by_date
 
 bot = Bot(token=BOT_TOKEN)
 dp = Dispatcher()
@@ -71,6 +71,24 @@ async def handle_date(callback: types.CallbackQuery):
         text = f"На {date_str} пока ничего нет."
     await callback.message.answer(text)
     await callback.answer()
+
+@dp.message(Command("delete"))
+async def delete(message: types.Message):
+    if message.from_user.id != ADMIN_ID:
+        return await message.answer("Недостаточно прав.")
+
+    parts = message.text.split(" ")
+    if len(parts) < 2:
+        return await message.answer("Формат: /delete YYYY-MM-DD")
+
+    date_str = parts[1]
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+    except ValueError:
+        return await message.answer("Неверный формат даты. Используй YYYY-MM-DD.")
+
+    await delete_plans_by_date(date_str)
+    await message.answer(f"Удалены все планы на {date_str}.")
 
 async def main():
     await init_db()
